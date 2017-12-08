@@ -67,5 +67,9 @@ for h = 1:5
 end
 
 loglog(step,error2,'*')
+gamma = abs((error2(end)-error2(1))/(1/2-1/32));
+hold on
+loglog(step,step.^gamma);
 xlabel('h_{max}','fontsize',16)
 ylabel('Energy norm of the error','fontsize',16)
+legend('Energynorm', 'h_{max}^{gamma}')

@@ -24,7 +24,7 @@ free = setdiff([1:np],fixed);               % interior nodes
 g = zeros(size(fixed,2),1);
 
 
-A(e(1,:),:) = I(e(1,:),:);
+A(e(1,:),:) = I(e(1,:),:); o
 b1(e(1,:)) = 0;
 
 fixed = unique([e(1,:) e(2,:)]);            % boundary nodes

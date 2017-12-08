@@ -1,7 +1,7 @@
 close all
 clear all
-
-L = 300;                % number of time levels
+tic
+L = 300;                % number of time steps
 T = 30;                  % final time
 t = linspace(0,T,L+1);   % time grid
 h = 5;
@@ -28,17 +28,39 @@ A = A(free,free);
 M = M(free,free);
 U(fixed) = 0;
 
+Mass0 = 0;
+UR = U;
+for K = 1:size(t2, 2);
+    nodes = t2(1:3,K);
+    area = polyarea(p(1,nodes), p(2,nodes));
+    Mass0 = Mass0 + 1/3*sum(U(nodes))*area;
+end
 
+pdesurf(p,t2,U)
+MassT = zeros(1,L);
+zlabel('Concentration [mmol/mm^3]', 'fontsize', 16);
 
 for l = 1:L
-    1
     k = t(l+1) - t(l);
     U(free) = (M+k/2*A*alph)\((M- k*alph/2*A)*U(free)+k/2*(b1+b0));    %nota that b should be zero...
     b0 = 0;
-        pdesurf(p,t2,U)
-        drawnow
-        pause(T/100);
+    %           pdesurf(p,t2,U)
+    %           drawnow
+    %           pause(T/100);
+    for K = 1:size(t2, 2);
+        nodes = t2(1:3,K);
+        area = polyarea(p(1,nodes), p(2,nodes));
+        MassT(l) = MassT(l) + 1/3*sum(U(nodes))*abs(area);
+    end
 end
+figure
+pdesurf(p,t2,U);
+zlabel('Concentration [mmol/mm^3]', 'fontsize', 16)
 
-
+figure
+MassLoss = Mass0 - MassT;
+plot(0:300, [0 MassLoss]);
+ylabel('Massloss', 'fontsize', 16);
+xlabel('Timestep', 'fontsize', 16);
+toc
 
